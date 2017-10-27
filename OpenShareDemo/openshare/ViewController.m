@@ -10,6 +10,10 @@
 #import "UIControl+Blocks.h"
 #import "OpenShareHeader.h"
 
+#define FT_WEIBO_APPKEY         @"2645776991"
+#define FT_WEIBO_APPSECRET      @"785818577abc810dfac71fa7c59d1957"
+#define FT_WEIBO_CALLBACK_URL   @"http://sns.whalecloud.com/sina2/callback"
+
 @interface ViewController ()
 
 @end
@@ -145,11 +149,15 @@
 
 #pragma mark 新浪微博测试
 -(UIView*)sinaWeiboView:(CGRect)frame{
+    
+    
+    [OpenShare connectWeiboWithAppKey:FT_WEIBO_APPKEY appSecret:FT_WEIBO_APPSECRET redirectURI:FT_WEIBO_CALLBACK_URL];
+    
     UIView *ret=[[UIView alloc] initWithFrame:frame];
     UIButton *auth=[self button:@"登录" WithCenter:CGPointMake(frame.size.width/2, 40)];
     [ret addSubview:auth];
     [auth addEventHandler:^(id sender) {
-        [OpenShare WeiboAuth:@"all" redirectURI:@"http://openshare.gfzj.us/" Success:^(NSDictionary *message) {
+        [OpenShare WeiboAuth:@"all" redirectURI:FT_WEIBO_CALLBACK_URL Success:^(NSDictionary *message) {
             ULog(@"微博登录成功:\n%@",message);
         } Fail:^(NSDictionary *message, NSError *error) {
             ULog(@"微博登录失败:\n%@\n%@",message,error);
@@ -248,11 +256,11 @@
 -(void)qqViewHandler:(UIButton*)btn{
     UISegmentedControl *seg=(UISegmentedControl*)[panel viewWithTag:2002];
     OSMessage *msg=[[OSMessage alloc] init];
-    msg.title=@"Hello OpenShare (msg.title)";
+    msg.title=[NSString stringWithFormat:@"Hello OpenShare (msg.title) %f",[[NSDate date] timeIntervalSince1970]];
     if (btn.tag>=2) {
         msg.image=testImage;
         msg.thumbnail=testThumbImage;
-        msg.desc=@"这里写的是msg.description";
+        msg.desc=[NSString stringWithFormat:@"这里写的是msg.description %f",[[NSDate date] timeIntervalSince1970]];
     }
     if(btn.tag==3){
         msg.link=@"http://sports.qq.com/a/20120510/000650.htm";
